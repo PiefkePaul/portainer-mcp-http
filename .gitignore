@@ -1,0 +1,5 @@
+dist
+.dev
+.tmp
+portainer-mcp
+.smbdelete*
