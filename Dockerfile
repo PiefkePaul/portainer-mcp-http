@@ -21,13 +21,13 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} \
 
 RUN mkdir -p /out/data
 
-FROM gcr.io/distroless/base-debian12:nonroot
+FROM gcr.io/distroless/base-debian12
 
 WORKDIR /app
 
 COPY --from=builder /out/portainer-mcp /usr/local/bin/portainer-mcp
-COPY --chown=nonroot:nonroot internal/tooldef/tools.yaml /app/tools.yaml
-COPY --from=builder --chown=nonroot:nonroot /out/data /data
+COPY internal/tooldef/tools.yaml /app/tools.yaml
+COPY --from=builder /out/data /data
 
 EXPOSE 8080
 

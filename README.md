@@ -190,6 +190,8 @@ By default, the container starts with:
 
 Mount `/data` to persist the generated `tools.yaml` across container restarts.
 
+The published container image is designed to work with typical NAS bind mounts where UID/GID ownership can differ from the image user. If you run in a stricter environment, you can still override the container user in your orchestrator.
+
 ## Disable Version Check
 
 By default, the application validates that your Portainer server version matches the supported version and will fail to start if there's a mismatch. If you have a Portainer server version that doesn't have a corresponding Portainer MCP version available, you can disable this version check to attempt connection anyway.
