@@ -36,8 +36,8 @@ func main() {
 	serverFlag := flag.String("server", envOrDefault("PORTAINER_SERVER", ""), "The Portainer server URL")
 	tokenFlag := flag.String("token", envOrDefault("PORTAINER_TOKEN", ""), "The authentication token for the Portainer server")
 	toolsFlag := flag.String("tools", envOrDefault("PORTAINER_TOOLS_PATH", ""), "The path to the tools YAML file")
-	readOnlyFlag := flag.Bool("read-only", false, "Run in read-only mode")
-	disableVersionCheckFlag := flag.Bool("disable-version-check", false, "Disable Portainer server version check")
+	readOnlyFlag := flag.Bool("read-only", envBoolOrDefault(false, "READ_ONLY", "PORTAINER_READ_ONLY"), "Run in read-only mode")
+	disableVersionCheckFlag := flag.Bool("disable-version-check", envBoolOrDefault(false, "DISABLE_VERSION_CHECK", "PORTAINER_DISABLE_VERSION_CHECK"), "Disable Portainer server version check")
 	transportFlag := flag.String("transport", envFirstOrDefault("stdio", "MCP_TRANSPORT"), "Transport to use: stdio or http")
 	listenAddrFlag := flag.String("listen-addr", envFirstOrDefault(defaultHTTPListenAddr, "MCP_HTTP_LISTEN_ADDR", "MCP_LISTEN_ADDR"), "Address to listen on for HTTP transport")
 	mcpPathFlag := flag.String("mcp-path", envFirstOrDefault("/mcp", "MCP_HTTP_PATH", "MCP_PATH"), "HTTP path used for the MCP endpoint")
@@ -230,6 +230,24 @@ func envFirstOrDefault(fallback string, keys ...string) string {
 	for _, key := range keys {
 		if value := os.Getenv(key); value != "" {
 			return value
+		}
+	}
+
+	return fallback
+}
+
+func envBoolOrDefault(fallback bool, keys ...string) bool {
+	for _, key := range keys {
+		value := strings.ToLower(strings.TrimSpace(os.Getenv(key)))
+		switch value {
+		case "":
+			continue
+		case "1", "true", "yes", "y", "on":
+			return true
+		case "0", "false", "no", "n", "off":
+			return false
+		default:
+			return fallback
 		}
 	}
 

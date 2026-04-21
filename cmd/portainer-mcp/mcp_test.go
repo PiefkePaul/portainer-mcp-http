@@ -82,3 +82,16 @@ func TestNormalizeLogAddress(t *testing.T) {
 	assert.Equal(t, "0.0.0.0:8080", normalizeLogAddress("0.0.0.0:8080"))
 	assert.Equal(t, "127.0.0.1", normalizeLogAddress(""))
 }
+
+func TestEnvBoolOrDefault(t *testing.T) {
+	t.Setenv("BOOL_TRUE", "true")
+	t.Setenv("BOOL_ONE", "1")
+	t.Setenv("BOOL_FALSE", "false")
+	t.Setenv("BOOL_INVALID", "wat")
+
+	assert.True(t, envBoolOrDefault(false, "BOOL_TRUE"))
+	assert.True(t, envBoolOrDefault(false, "BOOL_ONE"))
+	assert.False(t, envBoolOrDefault(true, "BOOL_FALSE"))
+	assert.True(t, envBoolOrDefault(true, "BOOL_INVALID"))
+	assert.False(t, envBoolOrDefault(false, "BOOL_MISSING"))
+}

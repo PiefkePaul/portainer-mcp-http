@@ -12,6 +12,8 @@ Portainer MCP HTTP is a fork-friendly distribution of Portainer MCP with optiona
 
 The binary still supports classic `stdio` MCP usage for desktop clients, but can also run as a long-lived HTTP service inside Docker or Kubernetes.
 
+This project is based on the upstream [portainer/portainer-mcp](https://github.com/portainer/portainer-mcp) project. The HTTP transport, Docker packaging, and gateway-oriented deployment defaults are maintained in this standalone fork.
+
 This project aims to provide a standardized way to connect Portainer's container management capabilities with AI models and other services.
 
 MCP (Model Context Protocol) is an open protocol that standardizes how applications provide context to LLMs (Large Language Models). Similar to how USB-C provides a standardized way to connect devices to peripherals, MCP provides a standardized way to connect AI models to different data sources and tools.
@@ -184,7 +186,9 @@ By default, the container starts with:
 - transport: `http`
 - MCP endpoint: `/mcp`
 - health endpoint: `/healthz`
-- tools file: `/app/tools.yaml`
+- tools file: `/data/tools.yaml`
+
+Mount `/data` to persist the generated `tools.yaml` across container restarts.
 
 ## Disable Version Check
 

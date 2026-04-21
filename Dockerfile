@@ -19,14 +19,19 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} \
 	-o /out/portainer-mcp \
 	./cmd/portainer-mcp
 
+RUN mkdir -p /out/data
+
 FROM gcr.io/distroless/base-debian12:nonroot
 
 WORKDIR /app
 
 COPY --from=builder /out/portainer-mcp /usr/local/bin/portainer-mcp
 COPY --chown=nonroot:nonroot internal/tooldef/tools.yaml /app/tools.yaml
+COPY --from=builder --chown=nonroot:nonroot /out/data /data
 
 EXPOSE 8080
 
+VOLUME ["/data"]
+
 ENTRYPOINT ["/usr/local/bin/portainer-mcp"]
-CMD ["-transport","http","-listen-addr",":8080","-mcp-path","/mcp","-health-path","/healthz","-tools","/app/tools.yaml"]
+CMD ["-transport","http","-listen-addr",":8080","-mcp-path","/mcp","-health-path","/healthz","-tools","/data/tools.yaml"]

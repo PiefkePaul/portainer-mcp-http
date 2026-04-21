@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/PiefkePaul/portainer-mcp-http/pkg/portainer/models"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
-	"github.com/PiefkePaul/portainer-mcp-http/pkg/portainer/models"
 	"github.com/stretchr/testify/assert"
 )
 

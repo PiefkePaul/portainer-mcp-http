@@ -1,8 +1,8 @@
 package models
 
 import (
-	apimodels "github.com/portainer/client-api-go/v2/pkg/models"
 	"github.com/PiefkePaul/portainer-mcp-http/pkg/portainer/utils"
+	apimodels "github.com/portainer/client-api-go/v2/pkg/models"
 )
 
 type Group struct {

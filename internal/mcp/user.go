@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/PiefkePaul/portainer-mcp-http/pkg/toolgen"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
-	"github.com/PiefkePaul/portainer-mcp-http/pkg/toolgen"
 )
 
 func (s *PortainerMCPServer) AddUserFeatures() {

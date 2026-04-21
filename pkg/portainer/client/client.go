@@ -3,6 +3,7 @@ package client
 import (
 	"crypto/tls"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -103,17 +104,37 @@ func NewPortainerClient(serverURL string, token string, opts ...ClientOption) *P
 		}
 	}
 
-	normalizedURL := strings.TrimRight(serverURL, "/")
-	if !strings.HasPrefix(normalizedURL, "http://") && !strings.HasPrefix(normalizedURL, "https://") {
-		normalizedURL = "https://" + normalizedURL
-	}
+	normalizedURL, sdkHost, sdkScheme := normalizeServerURL(serverURL)
 
 	return &PortainerClient{
-		cli: client.NewPortainerClient(serverURL, token, client.WithSkipTLSVerify(options.skipTLSVerify)),
+		cli: client.NewPortainerClient(
+			sdkHost,
+			token,
+			client.WithScheme(sdkScheme),
+			client.WithSkipTLSVerify(options.skipTLSVerify),
+		),
 		rawCli: &rawHTTPClient{
 			serverURL: normalizedURL,
 			token:     token,
 			httpCli:   httpCli,
 		},
 	}
+}
+
+func normalizeServerURL(serverURL string) (rawBaseURL string, sdkHost string, sdkScheme string) {
+	normalized := strings.TrimRight(strings.TrimSpace(serverURL), "/")
+	if normalized == "" {
+		return "https://", "", "https"
+	}
+
+	if !strings.HasPrefix(normalized, "http://") && !strings.HasPrefix(normalized, "https://") {
+		return "https://" + normalized, normalized, "https"
+	}
+
+	parsed, err := url.Parse(normalized)
+	if err != nil || parsed.Host == "" {
+		return normalized, normalized, "https"
+	}
+
+	return normalized, parsed.Host, parsed.Scheme
 }
