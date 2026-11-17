@@ -90,6 +90,6 @@ func (s *PortainerMCPServer) HandleDockerProxy() server.ToolHandlerFunc {
 			return mcp.NewToolResultErrorFromErr("failed to read Docker API response", err), nil
 		}
 
-		return mcp.NewToolResultText(string(responseBody)), nil
+		return mcp.NewToolResultText(string(redactDockerResponse(method, dockerAPIPath, responseBody))), nil
 	}
 }

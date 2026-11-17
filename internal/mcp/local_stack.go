@@ -32,7 +32,7 @@ func (s *PortainerMCPServer) HandleGetLocalStacks() server.ToolHandlerFunc {
 			return mcp.NewToolResultErrorFromErr("failed to get local stacks", err), nil
 		}
 
-		data, err := json.Marshal(stacks)
+		data, err := json.Marshal(redactLocalStacks(stacks))
 		if err != nil {
 			return mcp.NewToolResultErrorFromErr("failed to marshal local stacks", err), nil
 		}
@@ -113,6 +113,9 @@ func (s *PortainerMCPServer) HandleCreateLocalStack() server.ToolHandlerFunc {
 		if err != nil {
 			return mcp.NewToolResultErrorFromErr("invalid env parameter", err), nil
 		}
+		if envName, bad := containsRedacted(env); bad {
+			return mcp.NewToolResultError(fmt.Sprintf("env %s contains a redacted placeholder; pass the real value or keep secrets out of stack variables", envName)), nil
+		}
 
 		id, err := s.cli.CreateLocalStack(endpointId, name, file, env)
 		if err != nil {
@@ -145,6 +148,9 @@ func (s *PortainerMCPServer) HandleUpdateLocalStack() server.ToolHandlerFunc {
 		env, err := parseEnvVars(parser)
 		if err != nil {
 			return mcp.NewToolResultErrorFromErr("invalid env parameter", err), nil
+		}
+		if envName, bad := containsRedacted(env); bad {
+			return mcp.NewToolResultError(fmt.Sprintf("env %s contains a redacted placeholder; pass the real value or keep secrets out of stack variables", envName)), nil
 		}
 
 		prune, err := parser.GetBoolean("prune", false)
