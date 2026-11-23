@@ -1,5 +1,7 @@
 # Portainer MCP Development Guide
 
+> **Git-Server ist Gitea (seit 16.11.2026).** Regeln zu Remote, GitHub-Sync, PRs, CI und Registry: [`GITEA.md`](GITEA.md). Sie gehen älteren Angaben in dieser Datei vor.
+
 ## Build, Test & Run Commands
 **Prerequisites**: Go 1.24+, golangci-lint, Docker (for integration tests), npx (for inspector)
 
