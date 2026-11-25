@@ -1,4 +1,5 @@
-FROM golang:1.24.2 AS builder
+# Go-Toolchain neuer als go.mod ist gewollt (Sicherheitsfixes der Standardbibliothek).
+FROM golang:1.27-bookworm AS builder
 
 ARG VERSION=dev
 ARG COMMIT=unknown
